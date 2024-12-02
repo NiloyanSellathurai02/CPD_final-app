@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart'; // Voor meldingen/toasts
 import '../services/auth_service.dart'; // Zorg dat je de juiste service importeert
 
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -74,11 +75,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Gebruikersnaam / Email veld
+                  // Gebruikersnaam veld
                   TextField(
                     controller: nameController,
                     decoration: InputDecoration(
-                      labelText: 'Gebruikersnaam / Email',
+                      labelText: 'Gebruikersnaam',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -121,10 +122,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   // Link naar Login
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/login');
+                      Navigator.pushNamed(context, '/');
                     },
                     child: const Text(
-                      'Al een account? Login!',
+                      'Heb je een account?  login.',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black,

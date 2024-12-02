@@ -5,10 +5,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? token = ModalRoute.of(context)?.settings.arguments as String?;
-
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[300], // Achtergrondkleur
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -17,66 +15,63 @@ class HomePage extends StatelessWidget {
               // App logo
               Image.asset(
                 'assets/images/logo.png',
-                height: 200, // Groter logo
+                height: 150,
               ),
-              const SizedBox(height: 40),
-              // Grid met vier grotere knoppen
+              const SizedBox(height: 30),
+              // Grid of buttons
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Wrap(
-                  spacing: 24, // Meer ruimte tussen de knoppen
-                  runSpacing: 24,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    _buildFeatureButton(
-                      context: context,
-                      label: 'TEAMS',
-                      icon: Icons.group,
-                      onTap: () {
-                        if (token != null) {
-                          Navigator.pushNamed(context, '/teams', arguments: token);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Geen toegangstoken gevonden. Log opnieuw in.'),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    _buildFeatureButton(
-                      context: context,
-                      label: 'BEHEER',
-                      icon: Icons.settings,
-                      onTap: () {
-                        if (token != null) {
-                          Navigator.pushNamed(context, '/manage', arguments: token);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Geen toegangstoken gevonden. Log opnieuw in.'),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    _buildFeatureButton(
-                      context: context,
-                      label: 'WEDSTRIJDEN',
-                      icon: Icons.emoji_events,
-                      onTap: () {
-                        print("Wedstrijden geklikt");
-                      },
-                    ),
-                    _buildFeatureButton(
-                      context: context,
-                      label: 'EVENTS',
-                      icon: Icons.event,
-                      onTap: () {
-                        print("Events geklikt");
-                      },
-                    ),
-                  ],
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isMobile = constraints.maxWidth < 600;
+                    return GridView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: isMobile ? 2 : 4, // 2 kolommen op mobiel, 4 op grotere schermen
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                      ),
+                      children: [
+                        // Planning button
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'PLANNING',
+                          icon: Icons.schedule,
+                          onTap: () {
+                            print('Planning geklikt');
+                          },
+                        ),
+                        // Events button
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'EVENTS',
+                          icon: Icons.event,
+                          onTap: () {
+                            print('Events geklikt');
+                          },
+                        ),
+                        // Wedstrijden button
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'WEDSTRIJDEN',
+                          icon: Icons.sports,
+                          onTap: () {
+                            print('Wedstrijden geklikt');
+                          },
+                        ),
+                        // Teams button
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'TEAMS',
+                          icon: Icons.group,
+                          onTap: () {
+                            print('Teams geklikt');
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
@@ -95,11 +90,9 @@ class HomePage extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 160, // Grotere breedte
-        height: 160, // Grotere hoogte
         decoration: BoxDecoration(
           color: const Color(0xFF680735), // Donkerpaarse kleur
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,15 +100,15 @@ class HomePage extends StatelessWidget {
             Icon(
               icon,
               color: Colors.white,
-              size: 60, // Groter icoon
+              size: 50,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Text(
               label,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 20, // Grotere tekst
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
