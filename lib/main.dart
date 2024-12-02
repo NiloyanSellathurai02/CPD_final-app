@@ -17,6 +17,8 @@ class GatherlyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/register': (context) => const RegisterPage(),
+        '/login': (context) => const LoginPage(),
+
       },
 
 
