@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
               // App logo
               Image.asset(
                 'assets/images/logo.png',
-                height: 150,
+                height: 180,
               ),
               const SizedBox(height: 30),
               // Grid of buttons
