@@ -57,4 +57,22 @@ class ApiService {
       throw Exception(errorData['error'] ?? 'Registratie mislukt.');
     }
   }
+
+  Future<List<String>> getTeams() async {
+    final url = Uri.parse('$baseUrl/teams');
+
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return List<String>.from(data['data'].map((team) => team['name']));
+    } else {
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['error'] ?? 'Kan teams niet ophalen.');
+    }
+  }
+
 }

@@ -5,6 +5,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Haal het token op uit de arguments
+    final String? token = ModalRoute.of(context)?.settings.arguments as String?;
+
     return Scaffold(
       backgroundColor: Colors.grey[300], // Achtergrondkleur
       body: Center(
@@ -33,40 +36,50 @@ class HomePage extends StatelessWidget {
                         mainAxisSpacing: 20,
                       ),
                       children: [
-                        // Planning button
-                        _buildFeatureButton(
-                          context: context,
-                          label: 'PLANNING',
-                          icon: Icons.schedule,
-                          onTap: () {
-                            print('Planning geklikt');
-                          },
-                        ),
-                        // Events button
-                        _buildFeatureButton(
-                          context: context,
-                          label: 'EVENTS',
-                          icon: Icons.event,
-                          onTap: () {
-                            print('Events geklikt');
-                          },
-                        ),
-                        // Wedstrijden button
-                        _buildFeatureButton(
-                          context: context,
-                          label: 'WEDSTRIJDEN',
-                          icon: Icons.sports,
-                          onTap: () {
-                            print('Wedstrijden geklikt');
-                          },
-                        ),
                         // Teams button
                         _buildFeatureButton(
                           context: context,
                           label: 'TEAMS',
                           icon: Icons.group,
                           onTap: () {
-                            print('Teams geklikt');
+                            if (token != null) {
+                              Navigator.pushNamed(
+                                context,
+                                '/teams',
+                                arguments: token, // Geef het token door
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Geen toegangstoken gevonden. Log opnieuw in.'),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        // Voeg andere knoppen toe indien nodig
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'PLANNING',
+                          icon: Icons.schedule,
+                          onTap: () {
+                            print("Planning geklikt");
+                          },
+                        ),
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'EVENTS',
+                          icon: Icons.event,
+                          onTap: () {
+                            print("Events geklikt");
+                          },
+                        ),
+                        _buildFeatureButton(
+                          context: context,
+                          label: 'WEDSTRIJDEN',
+                          icon: Icons.sports,
+                          onTap: () {
+                            print("Wedstrijden geklikt");
                           },
                         ),
                       ],
