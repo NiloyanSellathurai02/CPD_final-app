@@ -23,7 +23,8 @@ class GatherlyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/teams': (context) => const TeamsPage(),
         '/manage': (context) => const ManagePage(),
-        '/createTeam': (context) => CreateTeamScreen(),
+        '/createTeam': (context) => CreateTeamScreen(), // Redirect to create page for teams
+
       },
 
 
