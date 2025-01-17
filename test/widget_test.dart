@@ -3,20 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:CPD_final_app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build your app and trigger a frame.
+  testWidgets('App initializes with LoginPage', (WidgetTester tester) async {
+    // Bouw de applicatie en trigger een frame
     await tester.pumpWidget( GatherlyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Controleer of de LoginPage wordt geladen
+    expect(find.text('Login'), findsWidgets); // Zorg dat dit overeenkomt met jouw LoginPage
   });
 }
