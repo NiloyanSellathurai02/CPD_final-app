@@ -1,0 +1,62 @@
+# Azure DevOps Pipeline for Flutter CI/CD
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: Build
+  displayName: 'Build Flutter APK'
+  steps:
+    # Step 1: Checkout repository
+    - task: Checkout@1
+
+    # Step 2: Setup Java 17
+    - task: UseJavaVersion@1
+      inputs:
+        versionSpec: '17'
+        jdkArchitecture: 'x64'
+
+    # Step 3: Setup Flutter
+    - script: |
+        git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        echo 'export PATH=$PATH:$PWD/flutter/bin' >> $HOME/.bashrc
+        source $HOME/.bashrc
+        flutter --version
+      displayName: 'Setup Flutter'
+
+    # Step 4: Install dependencies
+    - script: flutter pub get
+      displayName: 'Install dependencies'
+
+    # Step 5: Build APK
+    - script: flutter build apk --debug
+      displayName: 'Build APK'
+
+- job: UnitTesting
+  displayName: 'Run Unit Tests'
+  dependsOn: Build
+  steps:
+    # Step 1: Checkout repository
+    - task: Checkout@1
+
+    # Step 2: Setup Java 17
+    - task: UseJavaVersion@1
+      inputs:
+        versionSpec: '17'
+        jdkArchitecture: 'x64'
+
+    # Step 3: Setup Flutter
+    - script: |
+        git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        echo 'export PATH=$PATH:$PWD/flutter/bin' >> $HOME/.bashrc
+        source $HOME/.bashrc
+        flutter --version
+      displayName: 'Setup Flutter'
+
+    # Step 4: Run Unit Tests
+    - script: flutter test
+      displayName: 'Run Tests'
