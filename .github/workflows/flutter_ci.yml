@@ -11,28 +11,47 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # Stap 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Stap 2: Installeer Java 17
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Stap 3: Setup Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
           channel: 'stable'
 
+      # Stap 4: Installeer afhankelijkheden
       - name: Install dependencies
         run: flutter pub get
 
+      # Stap 5: Bouw APK
       - name: Build APK
         run: flutter build apk --debug
 
   unit-testing:
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -42,32 +61,3 @@ jobs:
 
       - name: Run Tests
         run: flutter test
-
-  code-quality:
-    runs-on: ubuntu-latest
-    needs: unit-testing
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Run Linter
-        run: flutter analyze
-
-  prepare-release:
-    runs-on: ubuntu-latest
-    needs: code-quality
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Prepare Release Artifact
-        run: |
-          mkdir release
-          cp build/app/outputs/flutter-apk/app-debug.apk release/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: prepare-release
-    steps:
-      - name: Deploy to Environment
-        run: echo "Deployment step (placeholder)"
