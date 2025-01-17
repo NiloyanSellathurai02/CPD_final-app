@@ -13,17 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Stap 1: Setup
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0'
+          flutter-version: '3.27.0' # Specificeer jouw Flutter versie
           channel: 'stable'
 
+      # Stap 2: Install dependencies (Setup)
       - name: Install dependencies
         run: flutter pub get
 
+      # Stap 3: Build the project
+      - name: Build APK
+        run: flutter build apk --debug # Of --release afhankelijk van je doel
+
+      # Stap 4: Run tests
       - name: Run widget tests
         run: flutter test
