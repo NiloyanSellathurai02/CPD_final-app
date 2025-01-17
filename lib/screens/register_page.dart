@@ -11,14 +11,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
   final ApiService apiService = ApiService();
 
   void registerUser() async {
-    String name = emailController.text.trim();
+    String name = nameController.text.trim();
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   // Gebruikersnaam veld
                   TextField(
-                    controller: emailController,
+                    controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Gebruikersnaam',
                       border: OutlineInputBorder(

@@ -88,11 +88,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                // Gebruikersnaam
+                // Gebruikersnaam / Email veld
                 TextField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: 'Gebruikersnaam',
+                    labelText: 'Gebruikersnaam / Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -113,21 +113,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     filled: true,
                     fillColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  child: const Text(
-                    'Heb je geen account? / Registreer.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -154,7 +139,23 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 15),
 
+                // Link naar registratiepagina
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  child: const Text(
+                    'Nog geen account? Registreer hier.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
