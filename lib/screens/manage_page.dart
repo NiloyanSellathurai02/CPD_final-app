@@ -5,6 +5,25 @@ class ManagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Token ophalen uit de route-argumenten
+    final String? token = ModalRoute.of(context)?.settings.arguments as String?;
+
+    // Controleer of de token aanwezig is
+    if (token == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Beheer'),
+          backgroundColor: const Color(0xFF680735),
+        ),
+        body: const Center(
+          child: Text(
+            'Geen token gevonden. Log opnieuw in.',
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+        ),
+      );
+    }
+
     // Schermbreedte ophalen
     final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -28,13 +47,37 @@ class ManagePage extends StatelessWidget {
               const SizedBox(height: 40),
               // Knoppenlijst
               _buildButton(
-                  context, 'BEKIJK MIJN TEAM', const Color(0xFF680735), screenWidth),
+                context,
+                'BEKIJK MIJN TEAM',
+                const Color(0xFF680735),
+                screenWidth,
+              ),
               _buildButton(
-                  context, 'MAAK TEAM AAN', const Color(0xFF680735), screenWidth),
+                context,
+                'MAAK TEAM AAN',
+                const Color(0xFF680735),
+                screenWidth,
+                onPressed: () {
+                  // Navigeren naar CreateTeamScreen met token
+                  Navigator.pushNamed(
+                    context,
+                    '/createTeam',
+                    arguments: token, // Token doorgeven
+                  );
+                },
+              ),
               _buildButton(
-                  context, 'TEAM BINNENGAAN', const Color(0xFF680735), screenWidth),
+                context,
+                'TEAM BINNENGAAN',
+                const Color(0xFF680735),
+                screenWidth,
+              ),
               _buildButton(
-                  context, 'TEAM VERLATEN', const Color(0xFF680735), screenWidth),
+                context,
+                'TEAM VERLATEN',
+                const Color(0xFF680735),
+                screenWidth,
+              ),
               const SizedBox(height: 20),
               // Uitlogknop
               _buildButton(
@@ -44,6 +87,10 @@ class ManagePage extends StatelessWidget {
                 screenWidth,
                 textColor: Colors.red,
                 borderColor: Colors.black,
+                onPressed: () {
+                  // Logica voor uitloggen
+                  Navigator.pop(context); // Terug naar login-scherm
+                },
               ),
             ],
           ),
@@ -59,6 +106,7 @@ class ManagePage extends StatelessWidget {
       double screenWidth, {
         Color textColor = Colors.white,
         Color borderColor = Colors.transparent,
+        VoidCallback? onPressed, // Optionele callback
       }) {
     // Bereken knopbreedte afhankelijk van schermgrootte
     double buttonWidth;
@@ -86,10 +134,11 @@ class ManagePage extends StatelessWidget {
               side: BorderSide(color: borderColor, width: 2), // Randkleur en breedte
             ),
           ),
-          onPressed: () {
-            // Voeg functionaliteit toe voor elke knop
-            print('$text knop is geklikt');
-          },
+          onPressed: onPressed ??
+                  () {
+                // Standaard functionaliteit als er geen onPressed is opgegeven
+                print('$text knop is geklikt');
+              },
           child: Text(
             text,
             style: TextStyle(
