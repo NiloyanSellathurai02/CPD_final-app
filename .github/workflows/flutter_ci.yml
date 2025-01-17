@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI/CD Pipeline
 
 on:
   push:
@@ -11,26 +11,63 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Stap 1: Setup
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0' # Specificeer jouw Flutter versie
+          flutter-version: '3.27.0'
           channel: 'stable'
 
-      # Stap 2: Install dependencies (Setup)
       - name: Install dependencies
         run: flutter pub get
 
-      # Stap 3: Build the project
       - name: Build APK
-        run: flutter build apk --debug # Of --release afhankelijk van je doel
+        run: flutter build apk --debug
 
-      # Stap 4: Run tests
-      - name: Run widget tests
+  unit-testing:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+          channel: 'stable'
+
+      - name: Run Tests
         run: flutter test
+
+  code-quality:
+    runs-on: ubuntu-latest
+    needs: unit-testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Linter
+        run: flutter analyze
+
+  prepare-release:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prepare Release Artifact
+        run: |
+          mkdir release
+          cp build/app/outputs/flutter-apk/app-debug.apk release/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: prepare-release
+    steps:
+      - name: Deploy to Environment
+        run: echo "Deployment step (placeholder)"
