@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; // Voor meldingen/toasts
-import '../services/auth_service.dart'; // Zorg dat je de juiste service importeert
-
+import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,41 +14,56 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirmPasswordController = TextEditingController();
 
   final ApiService apiService = ApiService();
+  String? _errorMessage;
 
   void registerUser() async {
     String name = nameController.text.trim();
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
+    setState(() {
+      _errorMessage = null; // Reset foutmelding
+    });
+
     if (name.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      Fluttertoast.showToast(msg: 'Vul alle velden in.');
+      setState(() {
+        _errorMessage = 'Vul alle velden in.';
+      });
       return;
     }
 
     if (password != confirmPassword) {
-      Fluttertoast.showToast(msg: 'Wachtwoorden komen niet overeen.');
+      setState(() {
+        _errorMessage = 'Wachtwoorden komen niet overeen.';
+      });
       return;
     }
 
     try {
       String responseMessage = await apiService.register(name, password);
-      Fluttertoast.showToast(msg: responseMessage);
+      setState(() {
+        _errorMessage = responseMessage; // Toon API-reactie als foutmelding of succes
+      });
 
-      // Navigeer naar de loginpagina na succesvolle registratie
-      Navigator.pushNamed(context, '/login');
+      if (responseMessage.toLowerCase().contains('succes')) {
+        // Navigeer naar de loginpagina bij succes
+        Navigator.pushNamed(context, '/login');
+      }
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Registratie mislukt: ${e.toString()}');
+      setState(() {
+        _errorMessage = 'Registratie mislukt: ${e.toString()}';
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEDEDED), // Achtergrondkleur
+      backgroundColor: const Color(0xFFEDEDED),
       body: Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400), // Maximale breedte voor web
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
@@ -73,10 +86,25 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Colors.green,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+
+                  // Foutmelding
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Text(
+                        _errorMessage!,
+                        key: const Key('errorMessage'), // Key voor tests
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
 
                   // Gebruikersnaam veld
                   TextField(
+                    key: const Key('nameField'),
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Gebruikersnaam',
@@ -91,6 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   // Wachtwoord veld
                   TextField(
+                    key: const Key('passwordField'),
                     controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -106,6 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   // Herhaal Wachtwoord veld
                   TextField(
+                    key: const Key('confirmPasswordField'),
                     controller: confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -140,14 +170,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
+                      key: const Key('registerButton'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF680735), // Donkerpaars zoals in mockup
+                        backgroundColor: const Color(0xFF680735),
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: registerUser, // Registreer logica
+                      onPressed: registerUser,
                       child: const Text(
                         'Registreer',
                         style: TextStyle(

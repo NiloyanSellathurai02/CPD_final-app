@@ -15,12 +15,11 @@ class GatherlyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const LoginPage(),
+        '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/register': (context) => const RegisterPage(),
-        '/login': (context) => const LoginPage(),
         '/teams': (context) => const TeamsPage(),
         '/manage': (context) => const ManagePage(),
         '/createTeam': (context) => CreateTeamScreen(), // Redirect to create page for teams
