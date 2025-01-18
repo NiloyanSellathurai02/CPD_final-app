@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class TeamsPage extends StatefulWidget {
-  const TeamsPage({super.key});
+  final List<Map<String, dynamic>>? mockTeams; // Voor testen
+
+  const TeamsPage({this.mockTeams, super.key});
 
   @override
   State<TeamsPage> createState() => _TeamsPageState();
@@ -14,15 +16,27 @@ class _TeamsPageState extends State<TeamsPage> {
   String? errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.mockTeams != null) {
+      // Gebruik mock data als het beschikbaar is (voor testen)
+      teams = widget.mockTeams!;
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final String? token = ModalRoute.of(context)?.settings.arguments as String?;
-    if (token != null) {
-      _fetchTeams(token);
-    } else {
-      setState(() {
-        errorMessage = "Access token ontbreekt.";
-      });
+    if (widget.mockTeams == null) {
+      // Alleen backenddata ophalen als er geen mock data is
+      final String? token = ModalRoute.of(context)?.settings.arguments as String?;
+      if (token != null) {
+        _fetchTeams(token);
+      } else {
+        setState(() {
+          errorMessage = "Access token ontbreekt.";
+        });
+      }
     }
   }
 
@@ -59,7 +73,6 @@ class _TeamsPageState extends State<TeamsPage> {
   void _onTeamClick(Map<String, dynamic> team) {
     // Logica om teamdetails weer te geven
     print('Bekijk team: ${team['name']}');
-    // Navigatie naar een detailpagina kan hier worden toegevoegd
   }
 
   @override
@@ -73,12 +86,17 @@ class _TeamsPageState extends State<TeamsPage> {
           ? Center(
         child: Text(
           errorMessage!,
+          key: const Key('errorMessage'), // Key voor foutmelding
           style: const TextStyle(color: Colors.red, fontSize: 16),
         ),
       )
           : teams.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+        key: Key('loadingIndicator'), // Key voor laadindicator
+        child: CircularProgressIndicator(),
+      )
           : GridView.builder(
+        key: const Key('teamsGrid'), // Key voor teams grid
         padding: const EdgeInsets.all(16),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
