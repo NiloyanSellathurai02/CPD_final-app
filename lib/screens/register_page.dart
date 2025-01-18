@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   // Link naar Login
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/');
+                      Navigator.pushNamed(context, '/login');
                     },
                     child: const Text(
                       'Heb je een account?  login.',
